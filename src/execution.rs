@@ -18,7 +18,7 @@ use bfir::AstNode::*;
 use diagnostics::Warning;
 
 #[cfg(test)]
-use bounds::MAX_CELL_INDEX;
+use bounds::DEFAULT_MAX_CELL_INDEX;
 
 use bounds::highest_cell_index;
 
@@ -34,7 +34,7 @@ impl<'a> ExecutionState<'a> {
     pub fn initial(instrs: &[AstNode]) -> Self {
         ExecutionState {
             start_instr: None,
-            cells: vec![Wrapping(0); highest_cell_index(instrs) + 1],
+            cells: vec![Wrapping(0); highest_cell_index(instrs,DEFAULT_MAX_CELL_INDEX) + 1],
             cell_ptr: 0,
             outputs: vec![],
         }
@@ -371,7 +371,7 @@ fn multiply_move_wrapping() {
 #[test]
 fn multiply_move_offset_too_high() {
     let mut changes: HashMap<isize, Cell> = HashMap::new();
-    changes.insert(MAX_CELL_INDEX as isize + 1, Wrapping(1));
+    changes.insert(DEFAULT_MAX_CELL_INDEX as isize + 1, Wrapping(1));
     let instrs = [Increment {
                       amount: Wrapping(1),
                       offset: 0,
@@ -383,7 +383,7 @@ fn multiply_move_offset_too_high() {
                   }];
 
     let final_state = execute(&instrs, MAX_STEPS).0;
-    let mut expected_cells = vec![Wrapping(0); MAX_CELL_INDEX + 1];
+    let mut expected_cells = vec![Wrapping(0); DEFAULT_MAX_CELL_INDEX + 1];
     expected_cells[0] = Wrapping(1);
     assert_eq!(final_state,
                ExecutionState {

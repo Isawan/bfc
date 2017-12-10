@@ -1104,7 +1104,7 @@ fn quickcheck_sort_by_offset_set() {
 fn quickcheck_sort_by_offset_pointer_increments() {
     fn sort_by_offset_pointer_increments(amount1: isize, amount2: isize) -> TestResult {
         // Although in principle our optimisations would work outside
-        // MAX_CELL_INDEX, we restrict the range to avoid overflow.
+        // DEFAULT_MAX_CELL_INDEX, we restrict the range to avoid overflow.
         if amount1 < -30000 || amount1 > 30000 || amount2 < -30000 || amount2 > 30000 {
             return TestResult::discard();
         }
